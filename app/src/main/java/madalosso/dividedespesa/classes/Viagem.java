@@ -1,4 +1,4 @@
-package madalosso.dividedespesa;
+package madalosso.dividedespesa.classes;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,6 +16,8 @@ public class Viagem implements Serializable{
     public Viagem(String nome, String destino) {
         this.nome = nome;
         this.destino = destino;
+        this.participantes= new ArrayList<>();
+        this.contas= new ArrayList<>();
     }
 
     public void setNome(String nome) {

@@ -76,7 +76,8 @@
         android:id="@+id/btAceitaViagem"
         android:layout_alignParentBottom="true"
         android:layout_alignLeft="@+id/btCriaParticipante"
-        android:layout_alignStart="@+id/btCriaParticipante" />
+        android:layout_alignStart="@+id/btCriaParticipante"
+        android:onClick="confirma" />
 
     <Button
         style="?android:attr/buttonStyleSmall"

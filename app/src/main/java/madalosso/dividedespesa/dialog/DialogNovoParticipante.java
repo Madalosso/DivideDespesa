@@ -1,4 +1,4 @@
-package madalosso.dividedespesa;
+package madalosso.dividedespesa.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.widget.Toast;
 
 import java.util.logging.Logger;
+
+import madalosso.dividedespesa.R;
 
 /**
  * Created by madal_000 on 04-Feb-15.

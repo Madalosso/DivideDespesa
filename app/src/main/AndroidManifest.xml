@@ -8,7 +8,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".Home"
+            android:name=".atividades.Home"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,9 +17,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ViagemData"
+            android:name=".atividades.ViagemData"
             android:label="@string/app_name"
-            android:parentActivityName=".Home">
+            android:parentActivityName=".atividades.Home">
 
         </activity>
     </application>

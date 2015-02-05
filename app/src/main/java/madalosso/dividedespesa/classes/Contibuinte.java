@@ -1,4 +1,4 @@
-package madalosso.dividedespesa;
+package madalosso.dividedespesa.classes;
 
 /**
  * Created by madal_000 on 04-Feb-15.

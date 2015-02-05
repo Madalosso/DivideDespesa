@@ -1,4 +1,4 @@
-package madalosso.dividedespesa;
+package madalosso.dividedespesa.classes;
 
 import java.io.Serializable;
 import java.util.ArrayList;
