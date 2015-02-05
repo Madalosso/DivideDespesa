@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">DivideDespesa</string>
+    <string name="action_settings">Settings</string>
+    <string name="bem_vindo">Bem Vindo</string>
+    <string name="labelBtAddViagem">+</string>
+    <string name="nova_viagem">Nova viagem</string>
+    <string name="hint_nome_viagem">Digite o nome da viagem</string>
+    <string name="destinoViagem">Destino</string>
+    <string name="participantes">Participantes</string>
+    <string name="add_participante">NovoPartici</string>
+    <string name="nova_despesa">Nova Despesa</string>
+    <string name="despesa_motivo">Motivo</string>
+    <string name="custo">Custo</string>
+    <string name="pagantes">Pagantes</string>
+    <string name="hint_nome_participante">Nome do participante</string>
+    <string name="dialog_paricipante_cancelar">X</string>
+    <string name="dialog_participante_novoplus">OK e +</string>
+    <string name="dialog_paricipante_OK">OK</string>
+
+</resources>
