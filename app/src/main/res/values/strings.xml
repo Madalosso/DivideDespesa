@@ -20,5 +20,6 @@
     <string name="dialog_paricipante_OK">OK</string>
     <string name="bt_aceitar">OK</string>
     <string name="bt_cancela">Cancelar</string>
+    <string name="valor_invalido">Valor Invalido</string>
 
 </resources>

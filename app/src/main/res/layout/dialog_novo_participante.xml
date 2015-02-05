@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
-        android:id="@+id/DailogParticipanteNome"
+        android:id="@+id/DialogParticipanteNome"
         android:layout_gravity="center_horizontal"
         android:hint="@string/hint_nome_participante" />
 

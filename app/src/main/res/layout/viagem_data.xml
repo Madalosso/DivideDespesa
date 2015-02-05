@@ -87,6 +87,7 @@
         android:id="@+id/btCancelaViagem"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@+id/textView"
-        android:layout_toStartOf="@+id/textView" />
+        android:layout_toStartOf="@+id/textView"
+        android:onClick="cancela" />
 
 </RelativeLayout>
