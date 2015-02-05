@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 
 /**
@@ -34,8 +35,11 @@ public class ViagemData extends ActionBarActivity {
         newFragment.show(getFragmentManager(),"addParticipante");
     }
 
-    public void addEFecha(View view){
 
+
+    public void addEFecha(View view){
+        Toast toast = Toast.makeText(getApplicationContext(), "TESTE", Toast.LENGTH_SHORT);
+        toast.show();
     }
 
 }

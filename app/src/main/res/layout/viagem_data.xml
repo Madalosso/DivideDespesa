@@ -65,6 +65,27 @@
         android:id="@+id/listaPartNovaViagem"
         android:layout_below="@+id/btCriaParticipante"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="20px" />
+        android:layout_marginLeft="20px"
+        android:layout_above="@+id/btAceitaViagem" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/bt_aceitar"
+        android:id="@+id/btAceitaViagem"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/btCriaParticipante"
+        android:layout_alignStart="@+id/btCriaParticipante" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/bt_cancela"
+        android:id="@+id/btCancelaViagem"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/textView"
+        android:layout_toStartOf="@+id/textView" />
 
 </RelativeLayout>

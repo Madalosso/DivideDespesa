@@ -14,9 +14,11 @@
     <string name="despesa_motivo">Motivo</string>
     <string name="custo">Custo</string>
     <string name="pagantes">Pagantes</string>
-    <string name="hint_nome_participante">Nome do participante</string>
+    <string name="hint_nome_participante">Digite o nome</string>
     <string name="dialog_paricipante_cancelar">X</string>
     <string name="dialog_participante_novoplus">OK e +</string>
     <string name="dialog_paricipante_OK">OK</string>
+    <string name="bt_aceitar">OK</string>
+    <string name="bt_cancela">Cancelar</string>
 
 </resources>
