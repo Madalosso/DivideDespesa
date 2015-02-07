@@ -43,4 +43,16 @@ public class Viagem implements Serializable{
     public ArrayList<Conta> getContas() {
         return contas;
     }
+
+    public void addParticipante(Participante p){
+        participantes.add(p);
+    }
+
+    public void addParticipante(String s){
+        participantes.add(new Participante(s));
+    }
+
+    public void remParticipante(int index){
+        participantes.remove(index);
+    }
 }

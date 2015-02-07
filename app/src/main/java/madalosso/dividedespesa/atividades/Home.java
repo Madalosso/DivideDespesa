@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -34,6 +36,7 @@ public class Home extends ActionBarActivity implements AdapterView.OnItemClickLi
 
         btAddViagem = (Button)findViewById(R.id.btAddViagem);
         lista = (ListView)findViewById(R.id.listView_viagens);
+        registerForContextMenu(lista);
 
         viagens = new ArrayList<>();
         //remover depois
@@ -89,9 +92,44 @@ public class Home extends ActionBarActivity implements AdapterView.OnItemClickLi
                 viagens.add(v);
             }
             if (resultCode == RESULT_CANCELED) {
-
+                Toast.makeText(this,"deu ruim",Toast.LENGTH_LONG).show();
             }
         }
     }
 
+    //CRIA ON CONTEXT MENU PARA ITENS DA LISTVIEW
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.context_menu_viagem, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.edit:
+                editViagem(info.position);
+                return true;
+            case R.id.delete:
+                remViagem(info.position);
+                return true;
+            case R.id.export:
+//                deleteNote(info.id);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+    public void remViagem(int index){
+        viagens.remove(index);
+        adapterListViewHome.notifyDataSetChanged();
+    }
+
+    public void editViagem(int index){
+
+    }
 }

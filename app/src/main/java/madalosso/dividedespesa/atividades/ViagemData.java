@@ -1,13 +1,20 @@
 package madalosso.dividedespesa.atividades;
 
 import android.app.AlertDialog;
-import android.app.DialogFragment;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,7 +24,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import madalosso.dividedespesa.R;
-import madalosso.dividedespesa.classes.Participante;
 import madalosso.dividedespesa.classes.Viagem;
 
 
@@ -38,9 +44,12 @@ public class ViagemData extends ActionBarActivity {
         setContentView(R.layout.viagem_data);
         btAddParticipante = (Button) findViewById(R.id.btCriaParticipante);
         listaParticipantes = (ListView) findViewById(R.id.listaPartNovaViagem);
+
+        //cria menu context para a view ListView
+        registerForContextMenu(listaParticipantes);
         participantes = new ArrayList<>();
-        participantes.add("FULANO1");
-        participantes.add("FULANO2");
+        participantes.add("Josnei");
+        participantes.add("Potassio");
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, participantes);
         listaParticipantes.setAdapter(adapter);
         nomeViagem = (EditText) findViewById(R.id.nomeNovaViagem);
@@ -55,7 +64,6 @@ public class ViagemData extends ActionBarActivity {
 
         final EditText input = new EditText(this);
         alert.setView(input);
-
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String value = input.getText().toString();
@@ -83,12 +91,14 @@ public class ViagemData extends ActionBarActivity {
                 novoParticipante(view);
             }
         });
-
-        alert.show();
+        AlertDialog alertaFinal = alert.create();
+        alertaFinal.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        alertaFinal.show();
     }
 
-    public void adicionaNome(String s){
+    public void adicionaNome(String s) {
         participantes.add(s);
+        adapter.notifyDataSetChanged();
     }
 
     public void confirma(View view) {
@@ -99,6 +109,9 @@ public class ViagemData extends ActionBarActivity {
             toast.show();
         } else {
             Viagem v = new Viagem(nome, dest);
+            for (String s : participantes) {
+                v.addParticipante(s);
+            }
             Intent returnIntent = new Intent();
             returnIntent.putExtra("viagem", v);
             setResult(RESULT_OK, returnIntent);
@@ -117,5 +130,40 @@ public class ViagemData extends ActionBarActivity {
         toast.show();
     }
 
+    //MENU CONTEXT - LISTVIEW PARTICIPANTES
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.context_menu_participantes, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.edit:
+                editParticipante(info.position);
+                return true;
+            case R.id.delete:
+                remParticipante(info.position);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+    public void editParticipante(int index) {
+        Toast.makeText(this, "Clicou pra editar", Toast.LENGTH_LONG).show();
+
+        //criar novo context menu para capturar o nome que ira substituir o nome do participante
+    }
+
+    public void remParticipante(int index) {
+        participantes.remove(index);
+        adapter.notifyDataSetChanged();
+    }
 
 }
