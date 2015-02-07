@@ -1,9 +1,11 @@
 package madalosso.dividedespesa.classes;
 
+import java.io.Serializable;
+
 /**
  * Created by madal_000 on 04-Feb-15.
  */
-public class Contibuinte {
+public class Contibuinte implements Serializable {
     private Participante pagante;
     private int valor;
 

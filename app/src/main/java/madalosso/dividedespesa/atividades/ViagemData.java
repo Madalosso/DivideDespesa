@@ -24,6 +24,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import madalosso.dividedespesa.R;
+import madalosso.dividedespesa.classes.Participante;
 import madalosso.dividedespesa.classes.Viagem;
 
 
@@ -37,6 +38,7 @@ public class ViagemData extends ActionBarActivity {
     EditText destino;
     ArrayList<String> participantes;
     ArrayAdapter<String> adapter;
+    boolean edit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,24 @@ public class ViagemData extends ActionBarActivity {
         listaParticipantes.setAdapter(adapter);
         nomeViagem = (EditText) findViewById(R.id.nomeNovaViagem);
         destino = (EditText) findViewById(R.id.destinoNovaViagem);
+        edit = false;
+
+        Viagem vEdit = (Viagem) getIntent().getSerializableExtra("viagem");
+        if (vEdit != null) {
+            edit = true;
+            String nome = vEdit.getNome();
+            String desc = vEdit.getDestino();
+            if (!nome.isEmpty()) {
+                nomeViagem.setText(nome);
+            }
+            if (!desc.isEmpty()) {
+                destino.setText(desc);
+            }
+            for (Participante p : vEdit.getParticipantes()) {
+                adapter.add(p.getNome());
+            }
+            adapter.notifyDataSetChanged();
+        }
     }
 
     public void novoParticipante(final View view) {
@@ -101,6 +121,10 @@ public class ViagemData extends ActionBarActivity {
         adapter.notifyDataSetChanged();
     }
 
+    public void confirmaEdit() {
+
+    }
+
     public void confirma(View view) {
         String nome = nomeViagem.getText().toString();
         String dest = destino.getText().toString();
@@ -123,11 +147,6 @@ public class ViagemData extends ActionBarActivity {
         Intent returnIntent = new Intent();
         setResult(RESULT_CANCELED, returnIntent);
         finish();
-    }
-
-    public void addEFecha(View view) {
-        Toast toast = Toast.makeText(getApplicationContext(), "TESTE", Toast.LENGTH_SHORT);
-        toast.show();
     }
 
     //MENU CONTEXT - LISTVIEW PARTICIPANTES
