@@ -50,11 +50,9 @@ public class ViagemData extends ActionBarActivity {
         //cria menu context para a view ListView
         registerForContextMenu(listaParticipantes);
         participantes = new ArrayList<>();
-        participantes.add("Josnei");
-        participantes.add("Potassio");
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, participantes);
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, participantes);//remove String?
         listaParticipantes.setAdapter(adapter);
-        nomeViagem = (EditText) findViewById(R.id.nomeNovaViagem);
+        nomeViagem = (EditText) findViewById(R.id.despesaTitle);
         destino = (EditText) findViewById(R.id.destinoNovaViagem);
         edit = false;
 

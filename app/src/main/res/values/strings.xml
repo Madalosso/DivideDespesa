@@ -10,7 +10,7 @@
     <string name="destinoViagem">Destino</string>
     <string name="participantes">Participantes</string>
     <string name="add_participante">NovoPartici</string>
-    <string name="nova_despesa">Nova Despesa</string>
+    <string name="nova_despesa">Informações da Despesa</string>
     <string name="despesa_motivo">Motivo</string>
     <string name="custo">Custo</string>
     <string name="pagantes">Pagantes</string>
@@ -21,5 +21,7 @@
     <string name="bt_aceitar">OK</string>
     <string name="bt_cancela">Cancelar</string>
     <string name="valor_invalido">Valor Invalido</string>
+    <string name="TextDespesas">Lista de Despesas</string>
+    <string name="btMenuFecharViagem">Fechar Viagem</string>
 
 </resources>

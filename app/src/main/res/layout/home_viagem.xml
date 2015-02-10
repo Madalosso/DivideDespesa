@@ -8,18 +8,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="0"
-        android:id="@+id/nomeNovaViagem"
+        android:text="@string/TextDespesas"
+        android:id="@+id/despesaTitle"
+        android:layout_marginTop="65dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="28dp" />
+        android:layout_centerHorizontal="true"/>
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/listView2"
+        android:id="@+id/listaDespesas"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/nomeNovaViagem" />
+        android:layout_below="@+id/despesaTitle" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -27,7 +27,17 @@
         android:layout_height="wrap_content"
         android:text="+"
         android:id="@+id/btAddDespesa"
-        android:layout_above="@+id/listView2"
+        android:layout_above="@+id/listaDespesas"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:onClick="addDespesa"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/tituloViagem"
+        android:layout_above="@+id/btAddDespesa"
+        android:layout_centerHorizontal="true"/>
 </RelativeLayout>

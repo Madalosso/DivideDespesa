@@ -15,7 +15,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/nomeNovaViagem"
+        android:id="@+id/despesaTitle"
         android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true"
         android:hint="@string/hint_nome_viagem" />
@@ -26,7 +26,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/destinoViagem"
         android:id="@+id/textView2"
-        android:layout_below="@+id/nomeNovaViagem"
+        android:layout_below="@+id/despesaTitle"
         android:layout_centerHorizontal="true" />
 
     <EditText

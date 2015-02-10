@@ -6,7 +6,7 @@ import java.util.ArrayList;
 /**
  * Created by madal_000 on 04-Feb-15.
  */
-public class Viagem implements Serializable{
+public class Viagem implements Serializable {
     private int id;
     private String nome;
     private String destino;
@@ -16,8 +16,8 @@ public class Viagem implements Serializable{
     public Viagem(String nome, String destino) {
         this.nome = nome;
         this.destino = destino;
-        this.participantes= new ArrayList<>();
-        this.contas= new ArrayList<>();
+        this.participantes = new ArrayList<>();
+        this.contas = new ArrayList<>();
     }
 
     public void setNome(String nome) {
@@ -44,15 +44,27 @@ public class Viagem implements Serializable{
         return contas;
     }
 
-    public void addParticipante(Participante p){
+    public void addParticipante(Participante p) {
         participantes.add(p);
     }
 
-    public void addParticipante(String s){
+    public void addParticipante(String s) {
         participantes.add(new Participante(s));
     }
 
-    public void remParticipante(int index){
+    public void remParticipante(int index) {
         participantes.remove(index);
+    }
+
+    public void addConta(Conta c) {
+        contas.add(c);
+    }
+
+    public void addConta(int index, Conta c) {
+        contas.add(index, c);
+    }
+
+    public void remConta(int index) {
+        contas.remove(index);
     }
 }

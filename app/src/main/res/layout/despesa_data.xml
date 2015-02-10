@@ -21,16 +21,18 @@
         android:id="@+id/textView5"
         android:layout_below="@+id/textView4"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="25dp"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText2"
-        android:layout_below="@+id/textView5"
+        android:id="@+id/edMotivo"
+        android:hint="Digite a causa/motivo do gasto"
+        android:layout_marginTop="61dp"
+        android:layout_below="@+id/textView4"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:hint="Digite a causa/motivo do gasto" />
+        android:layout_alignParentStart="true"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -38,19 +40,19 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/custo"
         android:id="@+id/textView6"
-        android:layout_below="@+id/editText2"
-        android:layout_alignRight="@+id/textView5"
-        android:layout_alignEnd="@+id/textView5" />
+        android:layout_below="@+id/edMotivo"
+        android:layout_toRightOf="@+id/textView5"
+        android:layout_toEndOf="@+id/textView5"
+        android:layout_marginTop="48dp"/>
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="numberDecimal"
         android:ems="10"
-        android:id="@+id/editText3"
-        android:layout_alignTop="@+id/textView6"
-        android:layout_toRightOf="@+id/textView6"
-        android:layout_toEndOf="@+id/textView6" />
+        android:id="@+id/edCusto"
+        android:layout_below="@+id/textView6"
+        android:layout_toRightOf="@+id/textView5"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -58,25 +60,36 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/pagantes"
         android:id="@+id/textView7"
-        android:layout_below="@+id/editText3"
-        android:layout_alignLeft="@+id/textView6"
-        android:layout_alignStart="@+id/textView6" />
+        android:layout_marginTop="70dp"
+        android:layout_below="@+id/edCusto"
+        android:layout_alignRight="@+id/btCancelaViagem"
+        android:layout_alignEnd="@+id/btCancelaViagem"/>
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
+    <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="+"
-        android:id="@+id/btNovoPagante"
-        android:layout_below="@+id/editText3"
-        android:layout_alignRight="@+id/textView4"
-        android:layout_alignEnd="@+id/textView4" />
+        android:id="@+id/spinnerParticipantes"
+        android:layout_below="@+id/textView7"
+        android:layout_alignParentRight="true"/>
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/listView4"
-        android:layout_below="@+id/btNovoPagante"
-        android:layout_alignLeft="@+id/textView7"
-        android:layout_alignStart="@+id/textView7" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/bt_aceitar"
+        android:id="@+id/btAceitaViagem"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/spinnerParticipantes"
+        android:layout_alignEnd="@+id/spinnerParticipantes"
+        android:onClick="confirma"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/bt_cancela"
+        android:id="@+id/btCancelaViagem"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="cancela"/>
+
 </RelativeLayout>

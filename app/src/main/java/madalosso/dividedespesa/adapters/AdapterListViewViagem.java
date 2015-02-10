@@ -10,26 +10,26 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import madalosso.dividedespesa.R;
-import madalosso.dividedespesa.classes.Viagem;
+import madalosso.dividedespesa.classes.Conta;
+import madalosso.dividedespesa.classes.Participante;
 
-/**
- * Created by madal_000 on 05-Feb-15.
- */
-public class AdapterListViewHome extends BaseAdapter{
+public class AdapterListViewViagem extends BaseAdapter {
     private LayoutInflater layoutInflater;
-    private ArrayList<Viagem> itens;
+    private ArrayList<Conta> contas;
+    private ArrayList<Participante> participantes;
 
-    public AdapterListViewHome(Context context, ArrayList<Viagem> itens) {
-        this.itens = itens;
+    public AdapterListViewViagem(Context context, ArrayList<Conta> itens,ArrayList<Participante> p) {
+        this.contas = itens;
         this.layoutInflater = LayoutInflater.from(context);
+        this.participantes=p;
     }
 
     public int getCount() {
-        return itens.size();
+        return contas.size();
     }
 
-    public Viagem getItem(int position) {
-        return itens.get(position);
+    public Conta getItem(int position) {
+        return contas.get(position);
     }
 
     public long getItemId(int position) {
@@ -41,13 +41,14 @@ public class AdapterListViewHome extends BaseAdapter{
         //se a view estiver nula (nunca criada), inflamos o layout nela.
         if (view == null) {
             //infla o layout para podermos pegar as views
-            view = layoutInflater.inflate(R.layout.listview_home, null);
+            view = layoutInflater.inflate(R.layout.listview_viagem, null);
 
             //cria um item de suporte para não precisarmos sempre
             //inflar as mesmas informacoes
             itemHolder = new ItemSuporte();
-            itemHolder.textName = ((TextView) view.findViewById(R.id.textViagem));
-            itemHolder.textDesc = ((TextView) view.findViewById(R.id.textDescricao));
+            itemHolder.textMotivo = ((TextView) view.findViewById(R.id.textMotivoGasto));
+            itemHolder.textPagante = ((TextView) view.findViewById(R.id.textPagante));
+            itemHolder.textValor = ((TextView) view.findViewById(R.id.textCusto));
 
             //define os itens na view;
             view.setTag(itemHolder);
@@ -58,17 +59,22 @@ public class AdapterListViewHome extends BaseAdapter{
 
         //pega os dados da lista
         //e define os valores nos itens.
-        Viagem item = itens.get(position);
-        itemHolder.textName.setText(item.getNome());
-        itemHolder.textDesc.setText(item.getDestino());
+        Conta item = contas.get(position);
+        itemHolder.textMotivo.setText(item.getMotivo());
+//        itemHolder.textPagante.setText("0");
+        itemHolder.textPagante.setText(participantes.get(item.getPagante()).getNome());
+        itemHolder.textValor.setText(String.valueOf(item.getCusto()));
 
         //retorna a view com as informações
         return view;
     }
 
     private class ItemSuporte {
-        TextView textDesc;
-        TextView textName;
+        TextView textMotivo;
+        TextView textValor;
+        TextView textPagante;
     }
+
+
 
 }

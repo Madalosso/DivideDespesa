@@ -11,7 +11,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -19,15 +18,16 @@ import java.util.ArrayList;
 
 import madalosso.dividedespesa.R;
 import madalosso.dividedespesa.adapters.AdapterListViewHome;
+import madalosso.dividedespesa.classes.Conta;
 import madalosso.dividedespesa.classes.Viagem;
 
 
 public class Home extends ActionBarActivity implements AdapterView.OnItemClickListener {
 
-    private ListView lista;
-    private ArrayList<Viagem> viagens;
     static final int NOVA_VIAGEM_REQUEST = 1;
     static final int EDIT_VIAGEM_REQUEST = 2;
+    static final int HANDLE_VIAGEM_REQUEST = 3;
+    private ArrayList<Viagem> viagens;
     private AdapterListViewHome adapterListViewHome;
     private int position_edit;
 
@@ -36,20 +36,27 @@ public class Home extends ActionBarActivity implements AdapterView.OnItemClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        Button btAddViagem = (Button) findViewById(R.id.btAddViagem);//precisa disso? a funcao esta definida no layout.
-        lista = (ListView) findViewById(R.id.listView_viagens);
+        ListView lista = (ListView) findViewById(R.id.listView_viagens);
         registerForContextMenu(lista);
 
-        viagens = new ArrayList<>();
-        //remover depois
-        viagens.add(new Viagem("China 2012", "China"));
-        viagens.add(new Viagem("Itália 2013", "Itália"));
+        criaDados();
 
 
         adapterListViewHome = new AdapterListViewHome(this, viagens);
         lista.setAdapter(adapterListViewHome);
         lista.setOnItemClickListener(this);
         lista.setCacheColorHint(Color.TRANSPARENT);
+    }
+
+    private void criaDados() {
+        viagens = new ArrayList<>();
+        viagens.add(new Viagem("China 2012", "China"));
+        viagens.add(new Viagem("Itália 2013", "Itália"));
+        viagens.get(1).addParticipante("Josnei");
+        viagens.get(1).addParticipante("Malandro");
+        viagens.get(1).addConta(new Conta("mot1", 1900, 0));
+        viagens.get(1).addConta(new Conta("Coc123", 1300, 1));
+        viagens.get(1).addConta(new Conta("12311a", 1320, 1));
     }
 
     public void addViagem(View view) {
@@ -71,7 +78,7 @@ public class Home extends ActionBarActivity implements AdapterView.OnItemClickLi
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case 1://resultado do add viagem
+            case NOVA_VIAGEM_REQUEST://resultado do add viagem
                 if (resultCode == RESULT_OK) {
                     Bundle bundle = data.getExtras();
                     Viagem v = (Viagem) bundle.get("viagem");
@@ -82,14 +89,12 @@ public class Home extends ActionBarActivity implements AdapterView.OnItemClickLi
                     Toast.makeText(this, "deu ruim", Toast.LENGTH_LONG).show();
                 }
                 break;
-            case 2://resultado de um edit da viagem
-                Toast.makeText(this,"RETURN",Toast.LENGTH_LONG).show();
+            case EDIT_VIAGEM_REQUEST://resultado de um edit da viagem
                 if (resultCode == RESULT_OK) {
                     Bundle bundle = data.getExtras();
                     Viagem v = (Viagem) bundle.get("viagem");
-                    Log.d("OTAVIOLOG","posicao"+position_edit);
                     viagens.remove(position_edit);
-                    viagens.add(position_edit,v);
+                    viagens.add(position_edit, v);
 //                    viagens.add(v);
                     adapterListViewHome.notifyDataSetChanged();
                 }
@@ -97,6 +102,18 @@ public class Home extends ActionBarActivity implements AdapterView.OnItemClickLi
                     Toast.makeText(this, "deu ruim", Toast.LENGTH_LONG).show();
                 }
                 break;
+            /*case HANDLE_VIAGEM_REQUEST://abre a viagem para editar as contas
+                if (resultCode == RESULT_OK) {
+                    Bundle bundle = data.getExtras();
+                    Viagem v = (Viagem) bundle.get("viagem");
+                    viagens.remove(position_edit);
+                    viagens.add(position_edit, v);
+                    adapterListViewHome.notifyDataSetChanged();
+                }
+                if (resultCode == RESULT_CANCELED) {
+                    Toast.makeText(this, "deu ruim", Toast.LENGTH_LONG).show();
+                }
+                break;*/
         }
 
     }
@@ -153,9 +170,8 @@ public class Home extends ActionBarActivity implements AdapterView.OnItemClickLi
 
     //SELECT DO LISTVIEW
     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-        //Pega o item que foi selecionado.
-        Viagem item = adapterListViewHome.getItem(arg2);
-        //Demostração
-        Toast.makeText(this, "Você Clicou em: " + item.getNome(), Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, ViagemHome.class);
+        intent.putExtra("viagem", viagens.get(arg2));
+        startActivityForResult(intent, HANDLE_VIAGEM_REQUEST);
     }
 }
