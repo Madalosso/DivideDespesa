@@ -23,5 +23,7 @@
     <string name="valor_invalido">Valor Invalido</string>
     <string name="TextDespesas">Lista de Despesas</string>
     <string name="btMenuFecharViagem">Fechar Viagem</string>
+    <string name="txt_media">Media de Gasto</string>
+    <string name="gastoTotal">Gasto Total</string>
 
 </resources>

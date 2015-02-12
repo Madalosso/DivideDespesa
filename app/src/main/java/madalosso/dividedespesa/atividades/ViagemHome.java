@@ -41,7 +41,7 @@ public class ViagemHome extends ActionBarActivity {
         contas = viagem.getContas();
         nomeViagem.setText(viagem.getNome());
 
-        adapter= new AdapterListViewViagem(this, contas,viagem.getParticipantes());
+        adapter = new AdapterListViewViagem(this, contas, viagem.getParticipantes());
         lista.setAdapter(adapter);
         lista.setCacheColorHint(Color.TRANSPARENT);
     }
@@ -73,7 +73,7 @@ public class ViagemHome extends ActionBarActivity {
                     Bundle bundle = data.getExtras();
                     Conta c = (Conta) bundle.get("conta");
                     viagem.remConta(position_edit);
-                    viagem.addConta(position_edit,c);
+                    viagem.addConta(position_edit, c);
                     contas = viagem.getContas();
                     adapter.notifyDataSetChanged();
                 }
@@ -109,26 +109,28 @@ public class ViagemHome extends ActionBarActivity {
         }
     }
 
-    public void addDespesa(View v){
+    public void addDespesa(View v) {
         Intent intent = new Intent(this, DespesaData.class);
         intent.putExtra("participantes", viagem.getParticipantes());
         startActivityForResult(intent, NOVA_DESPESA_REQUEST);
     }
 
-    public void editDespesa(int index){
+    public void editDespesa(int index) {
         Intent intent = new Intent(this, DespesaData.class);
         intent.putExtra("conta", contas.get(index));
         intent.putExtra("participantes", viagem.getParticipantes());
         startActivityForResult(intent, EDIT_DESPESA_REQUEST);
     }
 
-    public void remDespesa(int index){
+    public void remDespesa(int index) {
         viagem.remConta(index);
         contas = viagem.getContas();
         adapter.notifyDataSetChanged();
     }
 
-    public void fecha(){
-
+    public void fecha(MenuItem item) {
+        Intent intent = new Intent(this, ViagemResultado.class);
+        intent.putExtra("viagem", viagem);
+        startActivity(intent);
     }
 }

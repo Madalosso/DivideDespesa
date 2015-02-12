@@ -67,4 +67,8 @@ public class Viagem implements Serializable {
     public void remConta(int index) {
         contas.remove(index);
     }
+
+    public String getNomeParticipanteByIndex(int index){
+        return participantes.get(index).getNome();
+    }
 }
