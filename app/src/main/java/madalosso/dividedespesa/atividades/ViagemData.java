@@ -24,6 +24,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import madalosso.dividedespesa.R;
+import madalosso.dividedespesa.SqlAdapter.BdHelper;
 import madalosso.dividedespesa.classes.Participante;
 import madalosso.dividedespesa.classes.Viagem;
 
@@ -39,25 +40,33 @@ public class ViagemData extends ActionBarActivity {
     ArrayList<String> participantes;
     ArrayAdapter<String> adapter;
     boolean edit;
+    int edit_id;
+    BdHelper bd;
+    Viagem vEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viagem_data);
+
         btAddParticipante = (Button) findViewById(R.id.btCriaParticipante);
         listaParticipantes = (ListView) findViewById(R.id.listaPartNovaViagem);
+        nomeViagem = (EditText) findViewById(R.id.despesaTitle);
+        destino = (EditText) findViewById(R.id.destinoNovaViagem);
 
         //cria menu context para a view ListView
         registerForContextMenu(listaParticipantes);
+        listaParticipantes.setAdapter(adapter);
+
+        bd = new BdHelper(this);
         participantes = new ArrayList<>();
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, participantes);//remove String?
-        listaParticipantes.setAdapter(adapter);
-        nomeViagem = (EditText) findViewById(R.id.despesaTitle);
-        destino = (EditText) findViewById(R.id.destinoNovaViagem);
         edit = false;
 
-        Viagem vEdit = (Viagem) getIntent().getSerializableExtra("viagem");
-        if (vEdit != null) {
+        edit_id = getIntent().getIntExtra("id", -1);
+//        edit_id = (int) getIntent().getSerializableExtra("id");
+        if (edit_id != -1) {
+            vEdit = bd.getViagem(edit_id);
             edit = true;
             String nome = vEdit.getNome();
             String desc = vEdit.getDestino();
@@ -67,10 +76,10 @@ public class ViagemData extends ActionBarActivity {
             if (!desc.isEmpty()) {
                 destino.setText(desc);
             }
-            for (Participante p : vEdit.getParticipantes()) {
-                adapter.add(p.getNome());
-            }
-            adapter.notifyDataSetChanged();
+//            for (Participante p : vEdit.getParticipantes()) {
+//                adapter.add(p.getNome());
+//            }
+//            adapter.notifyDataSetChanged();
         }
     }
 
@@ -130,12 +139,19 @@ public class ViagemData extends ActionBarActivity {
             Toast toast = Toast.makeText(getApplicationContext(), "Preencha os campos Nome e Destino", Toast.LENGTH_SHORT);
             toast.show();
         } else {
-            Viagem v = new Viagem(nome, dest);
-            for (String s : participantes) {
-                v.addParticipante(s);
+            if (edit) {
+                vEdit.setNome(nome);
+                vEdit.setDestino(dest);
+                bd.updateViagem(vEdit);
+            } else {
+                bd.addViagem(new Viagem(nome, dest));
             }
+//            Viagem v = new Viagem(nome, dest);
+//            for (String s : participantes) {
+//                v.addParticipante(s);
+//            }
             Intent returnIntent = new Intent();
-            returnIntent.putExtra("viagem", v);
+//            returnIntent.putExtra("viagem", v);
             setResult(RESULT_OK, returnIntent);
             finish();
         }

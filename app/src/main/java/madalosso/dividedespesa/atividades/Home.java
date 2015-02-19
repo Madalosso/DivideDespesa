@@ -15,7 +15,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import madalosso.dividedespesa.R;
 import madalosso.dividedespesa.SqlAdapter.BdHelper;
@@ -32,7 +31,7 @@ public class Home extends ActionBarActivity implements AdapterView.OnItemClickLi
     private ArrayList<Viagem> viagens;
     private AdapterListViewHome adapterListViewHome;
     private int position_edit;
-    private BdHelper db;
+    private BdHelper bdHelper;
     private ArrayList<Viagem> list;
 
     @Override
@@ -46,20 +45,9 @@ public class Home extends ActionBarActivity implements AdapterView.OnItemClickLi
 
 //        criaDados();
         list = new ArrayList<>();
-        db = new BdHelper(this);
-        db.addViagem(new Viagem("Brazil 2010","Curitiba"));
-
-//        list = db.getAllViagens();
-//        for(Viagem vasd :list){
-//            Log.d("RECEBIDA: ",vasd.toString());
-//    }
-//        // delete one book
-////        db.deleteViagem(list.get(0));
-//
-//        list.clear();
-        // get all books
-        list = db.getAllViagens();
-        Log.d("leu lista ","size: " +list.size());
+        bdHelper = new BdHelper(this);
+        list = bdHelper.getAllViagens();
+        Log.d("leu lista ", "size: " + list.size());
 
         adapterListViewHome = new AdapterListViewHome(this, list);
 //        adapterListViewHome = new AdapterListViewHome(this, viagens);
@@ -86,17 +74,18 @@ public class Home extends ActionBarActivity implements AdapterView.OnItemClickLi
 
     public void remViagem(int index) {
         //viagens.remove(index);
-        db.deleteViagem(list.get(index));
+        bdHelper.deleteViagem(list.get(index));
         list.clear();
         // get all books
-        list.addAll(db.getAllViagens());
-        Log.d("size"," : "+list.size());
+        list.addAll(bdHelper.getAllViagens());
+        Log.d("size", " : " + list.size());
         adapterListViewHome.notifyDataSetChanged();
     }
 
     public void editViagem(int index) {
         Intent intent = new Intent(this, ViagemData.class);
-        intent.putExtra("viagem", viagens.get(index));
+//        intent.putExtra("viagem", viagens.get(index));
+        intent.putExtra("id", list.get(index).getId());
         startActivityForResult(intent, EDIT_VIAGEM_REQUEST);
     }
 
@@ -105,9 +94,12 @@ public class Home extends ActionBarActivity implements AdapterView.OnItemClickLi
         switch (requestCode) {
             case NOVA_VIAGEM_REQUEST://resultado do add viagem
                 if (resultCode == RESULT_OK) {
-                    Bundle bundle = data.getExtras();
-                    Viagem v = (Viagem) bundle.get("viagem");
-                    viagens.add(v);
+//                    Bundle bundle = data.getExtras();
+//                    Viagem v = (Viagem) bundle.get("viagem");
+//                    viagens.add(v);
+
+                    list.clear();
+                    list.addAll(bdHelper.getAllViagens());
                     adapterListViewHome.notifyDataSetChanged();
                 }
                 if (resultCode == RESULT_CANCELED) {
@@ -116,11 +108,13 @@ public class Home extends ActionBarActivity implements AdapterView.OnItemClickLi
                 break;
             case EDIT_VIAGEM_REQUEST://resultado de um edit da viagem
                 if (resultCode == RESULT_OK) {
-                    Bundle bundle = data.getExtras();
-                    Viagem v = (Viagem) bundle.get("viagem");
-                    viagens.remove(position_edit);
-                    viagens.add(position_edit, v);
+//                    Bundle bundle = data.getExtras();
+//                    Viagem v = (Viagem) bundle.get("viagem");
+//                    viagens.remove(position_edit);
+//                    viagens.add(position_edit, v);
 //                    viagens.add(v);
+                    list.clear();
+                    list.addAll(bdHelper.getAllViagens());
                     adapterListViewHome.notifyDataSetChanged();
                 }
                 if (resultCode == RESULT_CANCELED) {
