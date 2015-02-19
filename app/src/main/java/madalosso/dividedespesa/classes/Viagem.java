@@ -13,11 +13,30 @@ public class Viagem implements Serializable {
     private ArrayList<Participante> participantes;
     private ArrayList<Conta> contas;
 
+    public Viagem(){
+
+    }
+
     public Viagem(String nome, String destino) {
+        super();
+        this.id=-1;
         this.nome = nome;
         this.destino = destino;
         this.participantes = new ArrayList<>();
         this.contas = new ArrayList<>();
+    }
+
+    @Override
+    public String toString(){
+        return "VIAGEM : [ ID:"+ id + ", NOME: "+ nome +", DESTINO: "+ destino+"]";
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setNome(String nome) {

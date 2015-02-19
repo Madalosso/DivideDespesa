@@ -15,8 +15,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import madalosso.dividedespesa.R;
+import madalosso.dividedespesa.SqlAdapter.BdHelper;
 import madalosso.dividedespesa.adapters.AdapterListViewHome;
 import madalosso.dividedespesa.classes.Conta;
 import madalosso.dividedespesa.classes.Viagem;
@@ -30,19 +32,37 @@ public class Home extends ActionBarActivity implements AdapterView.OnItemClickLi
     private ArrayList<Viagem> viagens;
     private AdapterListViewHome adapterListViewHome;
     private int position_edit;
+    private BdHelper db;
+    private ArrayList<Viagem> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+
         ListView lista = (ListView) findViewById(R.id.listView_viagens);
         registerForContextMenu(lista);
 
-        criaDados();
+//        criaDados();
+        list = new ArrayList<>();
+        db = new BdHelper(this);
+        db.addViagem(new Viagem("Brazil 2010","Curitiba"));
 
+//        list = db.getAllViagens();
+//        for(Viagem vasd :list){
+//            Log.d("RECEBIDA: ",vasd.toString());
+//    }
+//        // delete one book
+////        db.deleteViagem(list.get(0));
+//
+//        list.clear();
+        // get all books
+        list = db.getAllViagens();
+        Log.d("leu lista ","size: " +list.size());
 
-        adapterListViewHome = new AdapterListViewHome(this, viagens);
+        adapterListViewHome = new AdapterListViewHome(this, list);
+//        adapterListViewHome = new AdapterListViewHome(this, viagens);
         lista.setAdapter(adapterListViewHome);
         lista.setOnItemClickListener(this);
         lista.setCacheColorHint(Color.TRANSPARENT);
@@ -65,7 +85,12 @@ public class Home extends ActionBarActivity implements AdapterView.OnItemClickLi
     }
 
     public void remViagem(int index) {
-        viagens.remove(index);
+        //viagens.remove(index);
+        db.deleteViagem(list.get(index));
+        list.clear();
+        // get all books
+        list.addAll(db.getAllViagens());
+        Log.d("size"," : "+list.size());
         adapterListViewHome.notifyDataSetChanged();
     }
 
