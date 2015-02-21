@@ -8,9 +8,33 @@ import java.io.Serializable;
 public class Participante implements Serializable{
     private String nome;
     private int id;
+    private int idViagem;
 
-    public Participante(String nome) {
+    public Participante(){
+
+    }
+
+    public Participante(String nome, int idv) {
+        super();
+        this.id=-1;
         this.nome = nome;
+        this.idViagem=idv;
+    }
+
+    public int getIdViagem() {
+        return idViagem;
+    }
+
+    public void setIdViagem(int idViagem) {
+        this.idViagem = idViagem;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNome() {

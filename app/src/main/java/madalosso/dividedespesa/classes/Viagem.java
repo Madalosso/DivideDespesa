@@ -67,10 +67,6 @@ public class Viagem implements Serializable {
         participantes.add(p);
     }
 
-    public void addParticipante(String s) {
-        participantes.add(new Participante(s));
-    }
-
     public void remParticipante(int index) {
         participantes.remove(index);
     }

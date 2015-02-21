@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,6 +26,8 @@ import java.util.ArrayList;
 
 import madalosso.dividedespesa.R;
 import madalosso.dividedespesa.SqlAdapter.BdHelper;
+import madalosso.dividedespesa.adapters.AdapterListViewParticipante;
+import madalosso.dividedespesa.classes.Conta;
 import madalosso.dividedespesa.classes.Participante;
 import madalosso.dividedespesa.classes.Viagem;
 
@@ -34,15 +37,16 @@ import madalosso.dividedespesa.classes.Viagem;
  */
 public class ViagemData extends ActionBarActivity {
     Button btAddParticipante;
-    ListView listaParticipantes;
+    ListView listViewParticipantes;
     EditText nomeViagem;
     EditText destino;
-    ArrayList<String> participantes;
-    ArrayAdapter<String> adapter;
+    //    ArrayList<String> participantes;
+    AdapterListViewParticipante adapterListViewParticipante;
     boolean edit;
     int edit_id;
     BdHelper bd;
     Viagem vEdit;
+    ArrayList<Participante> participantes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,17 +54,15 @@ public class ViagemData extends ActionBarActivity {
         setContentView(R.layout.viagem_data);
 
         btAddParticipante = (Button) findViewById(R.id.btCriaParticipante);
-        listaParticipantes = (ListView) findViewById(R.id.listaPartNovaViagem);
+        listViewParticipantes = (ListView) findViewById(R.id.listaPartNovaViagem);
         nomeViagem = (EditText) findViewById(R.id.despesaTitle);
         destino = (EditText) findViewById(R.id.destinoNovaViagem);
 
         //cria menu context para a view ListView
-        registerForContextMenu(listaParticipantes);
-        listaParticipantes.setAdapter(adapter);
+        registerForContextMenu(listViewParticipantes);
 
         bd = new BdHelper(this);
         participantes = new ArrayList<>();
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, participantes);//remove String?
         edit = false;
 
         edit_id = getIntent().getIntExtra("id", -1);
@@ -76,11 +78,14 @@ public class ViagemData extends ActionBarActivity {
             if (!desc.isEmpty()) {
                 destino.setText(desc);
             }
-//            for (Participante p : vEdit.getParticipantes()) {
-//                adapter.add(p.getNome());
-//            }
-//            adapter.notifyDataSetChanged();
+            participantes.addAll(bd.getAllParticipantes(vEdit.getId()));
+
+
         }
+
+        adapterListViewParticipante = new AdapterListViewParticipante(this, participantes);
+        listViewParticipantes.setAdapter(adapterListViewParticipante);
+        adapterListViewParticipante.notifyDataSetChanged();
     }
 
     public void novoParticipante(final View view) {
@@ -95,7 +100,7 @@ public class ViagemData extends ActionBarActivity {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String value = input.getText().toString();
                 if (!value.isEmpty()) {
-                    adicionaNome(value);
+                    addParticipante(value);
                 } else {
                     Toast.makeText(context, R.string.valor_invalido, Toast.LENGTH_LONG).show();
                     novoParticipante(view);
@@ -111,7 +116,7 @@ public class ViagemData extends ActionBarActivity {
             public void onClick(DialogInterface dialog, int which) {
                 String value = input.getText().toString();
                 if (!value.isEmpty()) {
-                    adicionaNome(value);
+                    addParticipante(value);
                 } else {
                     Toast.makeText(context, R.string.valor_invalido, Toast.LENGTH_LONG).show();
                 }
@@ -121,15 +126,6 @@ public class ViagemData extends ActionBarActivity {
         AlertDialog alertaFinal = alert.create();
         alertaFinal.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         alertaFinal.show();
-    }
-
-    public void adicionaNome(String s) {
-        participantes.add(s);
-        adapter.notifyDataSetChanged();
-    }
-
-    public void confirmaEdit() {
-
     }
 
     public void confirma(View view) {
@@ -143,8 +139,42 @@ public class ViagemData extends ActionBarActivity {
                 vEdit.setNome(nome);
                 vEdit.setDestino(dest);
                 bd.updateViagem(vEdit);
+                ArrayList<Participante> comp = new ArrayList<>();
+                comp.addAll(bd.getAllParticipantes(vEdit.getId()));
+
+                //adiciona novos participantes
+                for(int i =0; i<participantes.size();i++){
+                    if(participantes.get(i).getId()==-1){
+                        bd.addParticipante(participantes.get(i).getNome(),participantes.get(i).getIdViagem());
+                        participantes.remove(i);
+                        i--;
+                    }
+                }
+                //remove do banco os excluidos da lista.
+                for(Participante p : comp){
+                    boolean flag=false;
+                    for(Participante p2:participantes){
+                        if(p2.getId()==p.getId()){
+                            flag=true;
+                            break;
+                        }
+                    }
+                    if(!flag){
+//                        bd.rem
+                        //remove participante
+                        Toast.makeText(getApplicationContext(),"REMOVER "+p.getNome(),Toast.LENGTH_LONG).show();
+                    }
+                }
+                //tratar edits
+                for(Participante p : participantes){
+                    Log.d("UPDATE PART:",p.getNome()+p.getIdViagem());
+                    bd.updateParticipante(p);
+                }
             } else {
-                bd.addViagem(new Viagem(nome, dest));
+                long idNovaViagem = bd.addViagem(new Viagem(nome, dest));
+                for (Participante p : participantes) {
+                    bd.addParticipante(p.getNome(), (int) idNovaViagem);
+                }
             }
 //            Viagem v = new Viagem(nome, dest);
 //            for (String s : participantes) {
@@ -188,15 +218,65 @@ public class ViagemData extends ActionBarActivity {
         }
     }
 
-    public void editParticipante(int index) {
-        Toast.makeText(this, "Clicou pra editar", Toast.LENGTH_LONG).show();
+    public void addParticipante(String s) {
+        boolean flag = false;
+        for (Participante p : participantes) {
+            if (p.getNome().equals(s)) {
+                Toast.makeText(getApplicationContext(), "Nome ja existe", Toast.LENGTH_LONG).show();
+                flag = true;
+                break;
+            }
+        }
+        if (!flag) {
+            if (edit) {
+                participantes.add(new Participante(s, edit_id));
+            } else {
+                participantes.add(new Participante(s, -1));
+            }
+            adapterListViewParticipante.notifyDataSetChanged();
+        }
+    }
 
+
+    public void editParticipante(final int index) {
+//        participantes.get(index).setNome();
         //criar novo context menu para capturar o nome que ira substituir o nome do participante
+
+        final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Editar Nome Participante");
+
+        final EditText input = new EditText(this);
+        alert.setView(input);
+        AlertDialog.Builder builder = alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String value = input.getText().toString();
+                if (!value.isEmpty()) {
+                    participantes.get(index).setNome(value);
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.valor_invalido, Toast.LENGTH_LONG).show();
+                    editParticipante(index);
+                }
+
+            }
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+        AlertDialog alertaFinal = alert.create();
+        alertaFinal.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        alertaFinal.show();
+
     }
 
     public void remParticipante(int index) {
+        ArrayList<Conta> contas = new ArrayList<>();
+//        contas.addAll(bd.getContas())
+//        for(Conta c :contas){
+//            if(c.getPagante())
+//        }
         participantes.remove(index);
-        adapter.notifyDataSetChanged();
+        adapterListViewParticipante.notifyDataSetChanged();
     }
 
 }
