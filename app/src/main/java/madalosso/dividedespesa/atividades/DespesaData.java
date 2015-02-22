@@ -14,6 +14,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import madalosso.dividedespesa.R;
+import madalosso.dividedespesa.SqlAdapter.BdHelper;
 import madalosso.dividedespesa.classes.Conta;
 import madalosso.dividedespesa.classes.Participante;
 
@@ -21,6 +22,11 @@ public class DespesaData extends ActionBarActivity {
 
     private EditText edMotivo, edCusto;
     private Spinner spinner;
+    int idConta;
+    int idViagem;
+    private BdHelper bd;
+    private Conta c;
+    ArrayList<Participante> participantes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +37,13 @@ public class DespesaData extends ActionBarActivity {
         edCusto = (EditText) findViewById(R.id.edCusto);
         spinner = (Spinner) findViewById(R.id.spinnerParticipantes);
 
+        bd = new BdHelper(this);
         ArrayList<String> participanteNomes = new ArrayList<>();
-        Conta cEdit = (Conta) getIntent().getSerializableExtra("conta");
-        ArrayList<Participante> participantes = (ArrayList<Participante>) getIntent().getSerializableExtra("participantes");
+
+        idViagem = getIntent().getIntExtra("idViagem", -1);
+        idConta = getIntent().getIntExtra("idConta", -1);
+        participantes = bd.getAllParticipantes(idViagem);
+        Log.d("TESTE","size participantes:"+ participantes.size());
         if (participantes != null) {
             for (Participante p : participantes) {
                 participanteNomes.add(p.getNome());
@@ -47,13 +57,26 @@ public class DespesaData extends ActionBarActivity {
         }
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, participanteNomes);
         spinner.setAdapter(spinnerAdapter);
-        if (cEdit != null) {
-            String motivo = cEdit.getMotivo();
-            int custo = cEdit.getCusto();
-            edMotivo.setText(motivo);
-            edCusto.setText(String.valueOf(custo));
-            spinner.setSelection(cEdit.getPagante());
+        if (idConta != -1) {
+            c = bd.getConta(idConta);
+            edMotivo.setText(c.getMotivo());
+            edCusto.setText(String.valueOf(c.getCusto()));
+            int i=0;
+            for(Participante p :participantes){
+                if(c.getPagante()==p.getId()){
+                    break;
+                }
+                i++;
+            }
+            spinner.setSelection(i);
         }
+//        if (cEdit != null) {
+//            String motivo = cEdit.getMotivo();
+//            int custo = cEdit.getCusto();
+//            edMotivo.setText(motivo);
+//            edCusto.setText(String.valueOf(custo));
+//            spinner.setSelection(cEdit.getPagante());
+//        }
     }
 
     public void cancela(View v) {
@@ -66,14 +89,21 @@ public class DespesaData extends ActionBarActivity {
         String motivo = edMotivo.getText().toString();
         String custo = edCusto.getText().toString();
         int custo_valor = Integer.valueOf(custo);
-        int index_part = spinner.getSelectedItemPosition();
+        int index_part = participantes.get(spinner.getSelectedItemPosition()).getId();
         if (motivo.isEmpty() || custo.isEmpty()) {
             Toast.makeText(getApplicationContext(), "Preencha os campos Nome e Destino", Toast.LENGTH_SHORT).show();
         } else {
-
-            Conta novaConta = new Conta(motivo, custo_valor, index_part);
+            if (idConta != -1) {
+                c.setMotivo(motivo);
+                c.setIdViagem(idViagem);
+                c.setCusto(custo_valor);
+                c.setPagante(index_part); //verificar id do pagante
+                bd.updateConta(c);
+            } else {
+                Conta novaConta = new Conta(motivo, custo_valor, index_part, idViagem);
+                bd.addConta(novaConta);
+            }
             Intent returnIntent = new Intent();
-            returnIntent.putExtra("conta", novaConta);
             setResult(RESULT_OK, returnIntent);
             finish();
         }

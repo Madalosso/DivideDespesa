@@ -10,18 +10,19 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import madalosso.dividedespesa.R;
+import madalosso.dividedespesa.SqlAdapter.BdHelper;
 import madalosso.dividedespesa.classes.Conta;
 import madalosso.dividedespesa.classes.Participante;
 
 public class AdapterListViewViagem extends BaseAdapter {
     private LayoutInflater layoutInflater;
     private ArrayList<Conta> contas;
-    private ArrayList<Participante> participantes;
+    BdHelper bd;
 
-    public AdapterListViewViagem(Context context, ArrayList<Conta> itens,ArrayList<Participante> p) {
+    public AdapterListViewViagem(Context context, ArrayList<Conta> itens,BdHelper bd) {
         this.contas = itens;
         this.layoutInflater = LayoutInflater.from(context);
-        this.participantes=p;
+        this.bd =bd;
     }
 
     public int getCount() {
@@ -62,7 +63,8 @@ public class AdapterListViewViagem extends BaseAdapter {
         Conta item = contas.get(position);
         itemHolder.textMotivo.setText(item.getMotivo());
 //        itemHolder.textPagante.setText("0");
-        itemHolder.textPagante.setText(participantes.get(item.getPagante()).getNome());
+        int idPagante = bd.getConta(item.getId()).getPagante();
+        itemHolder.textPagante.setText(bd.getParticipante(idPagante).getNome());
         itemHolder.textValor.setText(String.valueOf(item.getCusto()));
 
         //retorna a view com as informações

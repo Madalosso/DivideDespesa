@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import madalosso.dividedespesa.SqlAdapter.BdHelper;
 import madalosso.dividedespesa.adapters.AdapterListViewViagem;
 import madalosso.dividedespesa.classes.Conta;
 import madalosso.dividedespesa.classes.Viagem;
@@ -28,6 +29,8 @@ public class ViagemHome extends ActionBarActivity {
     private AdapterListViewViagem adapter;
     private ArrayList<Conta> contas;
     private int position_edit;
+    private int idViagem;
+    BdHelper bd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +40,15 @@ public class ViagemHome extends ActionBarActivity {
         ListView lista = (ListView) findViewById(R.id.listaDespesas);
         registerForContextMenu(lista);
 
-        viagem = (Viagem) getIntent().getSerializableExtra("viagem");
-        contas = viagem.getContas();
+        bd = new BdHelper(this);
+
+        idViagem =getIntent().getIntExtra("id",-1);
+        viagem = bd.getViagem(idViagem);
+        contas = new ArrayList<>();
+        contas.addAll(bd.getAllContas(idViagem));
         nomeViagem.setText(viagem.getNome());
 
-        adapter = new AdapterListViewViagem(this, contas, viagem.getParticipantes());
+        adapter = new AdapterListViewViagem(this, contas, bd);
         lista.setAdapter(adapter);
         lista.setCacheColorHint(Color.TRANSPARENT);
     }
@@ -58,9 +65,11 @@ public class ViagemHome extends ActionBarActivity {
         switch (requestCode) {
             case 1://resultado do add
                 if (resultCode == RESULT_OK) {
-                    Bundle bundle = data.getExtras();
-                    Conta c = (Conta) bundle.get("conta");
-                    viagem.addConta(c);
+//                    Bundle bundle = data.getExtras();
+//                    Conta c = (Conta) bundle.get("conta");
+//                    viagem.addConta(c);
+                    contas.clear();
+                    contas.addAll(bd.getAllContas(idViagem));
                     adapter.notifyDataSetChanged();
                 }
                 if (resultCode == RESULT_CANCELED) {
@@ -70,11 +79,9 @@ public class ViagemHome extends ActionBarActivity {
             case 2://resultado de um edit
                 Toast.makeText(this, "RETURN", Toast.LENGTH_LONG).show();
                 if (resultCode == RESULT_OK) {
-                    Bundle bundle = data.getExtras();
-                    Conta c = (Conta) bundle.get("conta");
-                    viagem.remConta(position_edit);
-                    viagem.addConta(position_edit, c);
-                    contas = viagem.getContas();
+                    contas.clear();
+                    contas.addAll(bd.getAllContas(idViagem));
+                    adapter.notifyDataSetChanged();
                     adapter.notifyDataSetChanged();
                 }
                 if (resultCode == RESULT_CANCELED) {
@@ -111,26 +118,28 @@ public class ViagemHome extends ActionBarActivity {
 
     public void addDespesa(View v) {
         Intent intent = new Intent(this, DespesaData.class);
-        intent.putExtra("participantes", viagem.getParticipantes());
+//        intent.putExtra("participantes", viagem.getParticipantes());
+        intent.putExtra("idViagem", viagem.getId());
         startActivityForResult(intent, NOVA_DESPESA_REQUEST);
     }
 
     public void editDespesa(int index) {
         Intent intent = new Intent(this, DespesaData.class);
-        intent.putExtra("conta", contas.get(index));
-        intent.putExtra("participantes", viagem.getParticipantes());
+        intent.putExtra("idViagem", viagem.getId());
+        intent.putExtra("idConta", contas.get(index).getId());
         startActivityForResult(intent, EDIT_DESPESA_REQUEST);
     }
 
     public void remDespesa(int index) {
-        viagem.remConta(index);
-        contas = viagem.getContas();
+        bd.deleteConta(contas.get(index));
+        contas.remove(index);
+//        contas = viagem.getContas();
         adapter.notifyDataSetChanged();
     }
 
     public void fecha(MenuItem item) {
         Intent intent = new Intent(this, ViagemResultado.class);
-        intent.putExtra("viagem", viagem);
+        intent.putExtra("id", idViagem);
         startActivity(intent);
     }
 }

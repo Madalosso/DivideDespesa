@@ -1,21 +1,50 @@
 package madalosso.dividedespesa.classes;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * Created by madal_000 on 04-Feb-15.
  */
-public class Conta implements Serializable{
+public class Conta implements Serializable {
     private String motivo;
+    private int id;
     private int custo;
     private int moeda;//criar padrão para representar cada moeda
-    private int pagante;//index
+    private int idPagante;//index
+    private int idViagem;
 
-    public Conta(String motivo, int custo, int pagante) {
+    public Conta() {
+
+    }
+
+    public Conta(String motivo, int custo, int pagante, int idViagem) {
+        super();
+        this.id = -1;
         this.motivo = motivo;
         this.custo = custo;
-        this.pagante = pagante;
+        this.idPagante = pagante;
+        this.idViagem = idViagem;
+    }
+
+    @Override
+    public String toString() {
+        return "[motivo: "+motivo+", id: "+id+", custo: "+custo+", idPagante: "+idPagante+", idviagem: "+idViagem+" ]";
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getIdViagem() {
+        return idViagem;
+    }
+
+    public void setIdViagem(int idViagem) {
+        this.idViagem = idViagem;
     }
 
     public String getMotivo() {
@@ -43,10 +72,10 @@ public class Conta implements Serializable{
     }
 
     public int getPagante() {
-        return pagante;
+        return idPagante;
     }
 
     public void setPagante(int pagante) {
-        this.pagante = pagante;
+        this.idPagante = pagante;
     }
 }

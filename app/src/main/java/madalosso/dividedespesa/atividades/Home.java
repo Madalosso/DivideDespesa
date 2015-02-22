@@ -56,16 +56,6 @@ public class Home extends ActionBarActivity implements AdapterView.OnItemClickLi
         lista.setCacheColorHint(Color.TRANSPARENT);
     }
 
-    private void criaDados() {
-        viagens = new ArrayList<>();
-        viagens.add(new Viagem("China 2012", "China"));
-        viagens.add(new Viagem("Itália 2013", "Itália"));
-//        viagens.get(1).addParticipante("Josnei");
-//        viagens.get(1).addParticipante("Malandro");
-        viagens.get(1).addConta(new Conta("mot1", 1900, 0));
-        viagens.get(1).addConta(new Conta("Coc123", 1300, 1));
-        viagens.get(1).addConta(new Conta("12311a", 1320, 1));
-    }
 
     public void addViagem(View view) {
         Intent intent = new Intent(this, ViagemData.class);
@@ -190,7 +180,8 @@ public class Home extends ActionBarActivity implements AdapterView.OnItemClickLi
     //SELECT DO LISTVIEW
     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
         Intent intent = new Intent(this, ViagemHome.class);
-        intent.putExtra("viagem", viagens.get(arg2));
+        intent.putExtra("id", list.get(arg2).getId());
+//        intent.putExtra("viagem", viagens.get(arg2));
         startActivityForResult(intent, HANDLE_VIAGEM_REQUEST);
     }
 }
